@@ -9,7 +9,6 @@ use chrono::{DateTime, Utc};
 use data::capabilities::{
     LabeledResponseContext, MultilineBatchKind, multiline_concat_lines,
 };
-use data::config::actions::NotificationAction;
 use data::config::buffer::{ScrollPosition, UsernameFormat};
 use data::dashboard::{self, BufferAction};
 use data::environment::{RELEASE_WEBSITE, WIKI_WEBSITE};
@@ -4637,10 +4636,7 @@ impl Dashboard {
                 match action {
                     toast::Action::Dismiss => Task::none(),
                     toast::Action::OpenOrFocusBuffer => {
-                        if let Some(buffer) = buffer
-                            && let NotificationAction::OpenBuffer(buffer_action) =
-                                config.actions.notification
-                        {
+                        if let Some(buffer) = buffer {
                             // When an notification action is performed in Wayland
                             // the application is not automatically brought forward.
                             // Request attention in order to do so.
@@ -4661,7 +4657,7 @@ impl Dashboard {
                             .chain(
                                 self.open_or_focus_buffer(
                                     buffer,
-                                    buffer_action,
+                                    config.actions.notification.open_buffer,
                                     clients,
                                     config,
                                 ),

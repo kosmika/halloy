@@ -8,7 +8,7 @@ pub struct Actions {
     pub sidebar: Sidebar,
     pub buffer: Buffer,
     pub nicklist: Nicklist,
-    pub notification: NotificationAction,
+    pub notification: Notification,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
@@ -138,43 +138,17 @@ impl<'de> Deserialize<'de> for ChannelClickAction {
     }
 }
 
-#[derive(Debug, Copy, Clone, Default)]
-pub enum NotificationAction {
-    OpenBuffer(BufferAction),
-    #[default]
-    Noop,
+#[derive(Debug, Copy, Clone, Default, Deserialize)]
+#[serde(default)]
+pub struct Notification {
+    pub default: NotificationAction,
+    pub open_buffer: BufferAction,
 }
 
-impl<'de> Deserialize<'de> for NotificationAction {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        #[derive(Deserialize)]
-        #[serde(rename_all = "kebab-case")]
-        enum ClickAction {
-            OpenBuffer(BufferAction),
-            #[serde(alias = "no-action")]
-            Noop,
-        }
-
-        #[derive(Deserialize)]
-        #[serde(untagged)]
-        enum Action {
-            ClickAction(ClickAction),
-            BufferAction(BufferAction),
-        }
-
-        match Action::deserialize(deserializer)? {
-            Action::ClickAction(click_action) => match click_action {
-                ClickAction::OpenBuffer(buffer_action) => {
-                    Ok(NotificationAction::OpenBuffer(buffer_action))
-                }
-                ClickAction::Noop => Ok(NotificationAction::Noop),
-            },
-            Action::BufferAction(buffer_action) => {
-                Ok(NotificationAction::OpenBuffer(buffer_action))
-            }
-        }
-    }
+#[derive(Debug, Copy, Clone, Default, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum NotificationAction {
+    OpenBuffer,
+    #[default]
+    ActivateApplication,
 }

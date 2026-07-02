@@ -516,7 +516,7 @@ impl Notifications {
 
         self.execute(
             notification_config,
-            config.actions.notification,
+            config.actions.notification.default,
             notification,
             &title,
             subtitle.as_deref(),

@@ -75,11 +75,17 @@ impl Toast {
             notification.app_id(data::environment::APPLICATION_ID);
         }
 
-        if has_buffer_context
-            && !matches!(notification_action, NotificationAction::Noop)
-        {
-            notification.action("default", "Open Buffer");
-            notification.action("open_or_focus_buffer", "Open Buffer");
+        match notification_action {
+            NotificationAction::ActivateApplication => {
+                if has_buffer_context {
+                    notification.action("open_or_focus_buffer", "Open Buffer");
+                }
+            }
+            NotificationAction::OpenBuffer => {
+                if has_buffer_context {
+                    notification.action("default", "Open Buffer");
+                }
+            }
         }
 
         Self(notification.finalize())

@@ -4,7 +4,7 @@ Application-wide actions; how user actions should be enacted.
 
 ## `buffer`
 
-How buffer actions should be enacted
+How buffer actions should be enacted.
 
 ```toml
 # Replace pane when clicking on channel/user names in a pane
@@ -111,7 +111,7 @@ join_channel = "replace-pane"
 
 ## `nicklist`
 
-How nicklist actions should be enacted
+How nicklist actions should be enacted.
 
 ```toml
 # Replace pane when clicking on a nickname in the nicklist
@@ -139,15 +139,40 @@ click_nickname = { "open-query" = "replace-pane" }
 
 ## `notification`
 
-Action when clicking on a notification with a buffer context (e.g. when clicking a notification for a highlight in a channel, the context is the channel buffer). `"new-pane"` opens a new pane each time. `"replace-pane"` replaces the focused pane with the buffer context. `"new-window"` opens a new window each time. `"no-action"` or `"noop"` will perform no action on clicks aside from the default application activation behavior.
+How notification actions should be enacted.
+
+```toml
+# Open buffer in a new window when clicking on a notification
+
+[actions.notification]
+default = "open-buffer"
+open_buffer = "new-window"
+```
+
+### `default`
+
+Default action when clicking on a notification.  When set to `"activate-application"` or when there is no buffer context for the notification (e.g. when clicking a notification for a monitored user going offline), then the default application activation behavior for notification will be enacted.  When there is a buffer context (e.g. when clicking a notification for a highlight in a channel, the context is the channel buffer) and set to `"open-buffer"`, then the buffer context will be opened.  If there is a buffer context and `"activate-application"` is set, then `"open-buffer"` will be provided as a secondary action (if supported by the notification system).  When opening a buffer, [`actions.notification.open_buffer`](#open_buffer) determines how it will be opened.
 
 ```toml
 # Type: string
-# Values: "new-pane", "replace-pane", "new-window", "no-action", "noop"
-# Default: "noop"
+# Values: "activate-application", "open-buffer"
+# Default: "activate-application"
 
-[actions]
-notification = "new-pane"
+[actions.notification]
+default = "open-buffer"
+```
+
+### `open_buffer`
+
+When opening a buffer from a notification, how it will be opened. `"new-pane"` opens a new pane each time. `"replace-pane"` replaces the focused pane with the buffer. `"new-window"` opens a new window each time.
+
+```toml
+# Type: string
+# Values: "new-pane", "replace-pane", "new-window"
+# Default: "new-pane"
+
+[actions.notification]
+open_buffer = "replace-pane"
 ```
 
 ## `sidebar`
