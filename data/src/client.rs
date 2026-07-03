@@ -3387,7 +3387,12 @@ impl Client {
                         .and_then(|secs| secs.parse::<u64>().ok())
                         .map_or(Duration::ZERO, Duration::from_secs);
 
-                    let ready_at = Instant::now() + retry_after;
+                    // `Instant + Duration` panics on overflow, so a huge server-supplied RetryAfter
+                    // would crash the client. Clamp via checked_add.
+                    let ready_at =
+                        Instant::now().checked_add(retry_after).unwrap_or_else(
+                            || Instant::now() + Duration::from_secs(60),
+                        );
 
                     log::debug!(
                         "[{}] Metadata sync postponed for [{target}], retrying in {retry_after:?}",
