@@ -42,7 +42,7 @@ Changed:
 
 Thanks:
 
-- Contributions: @englut, @luca020400, @classabbyamp, @KaiKorla, @TheDcoder
+- Contributions: @englut, @luca020400, @classabbyamp, @KaiKorla, @TheDcoder, @City-busz
 - Bug reports: @luca020400, agent314
 
 # 2026.7.2 (2026-06-08)
