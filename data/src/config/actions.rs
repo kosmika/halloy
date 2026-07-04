@@ -8,6 +8,7 @@ pub struct Actions {
     pub sidebar: Sidebar,
     pub buffer: Buffer,
     pub nicklist: Nicklist,
+    pub notification: Notification,
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
@@ -135,4 +136,19 @@ impl<'de> Deserialize<'de> for ChannelClickAction {
             }
         }
     }
+}
+
+#[derive(Debug, Copy, Clone, Default, Deserialize)]
+#[serde(default)]
+pub struct Notification {
+    pub default: NotificationAction,
+    pub open_buffer: BufferAction,
+}
+
+#[derive(Debug, Copy, Clone, Default, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum NotificationAction {
+    OpenBuffer,
+    #[default]
+    ActivateApplication,
 }
