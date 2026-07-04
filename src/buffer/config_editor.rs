@@ -116,6 +116,28 @@ impl ConfigEditor {
         self.error = error.map(Error::parse);
     }
 
+    fn move_cursor(&mut self, motion: text_editor::Motion) {
+        let action = text_editor::Action::Move(motion);
+        self.history.track(&self.content, &action);
+        self.content.perform(action);
+    }
+
+    pub fn scroll_up_page(&mut self) {
+        self.move_cursor(text_editor::Motion::PageUp);
+    }
+
+    pub fn scroll_down_page(&mut self) {
+        self.move_cursor(text_editor::Motion::PageDown);
+    }
+
+    pub fn scroll_to_start(&mut self) {
+        self.move_cursor(text_editor::Motion::DocumentStart);
+    }
+
+    pub fn scroll_to_end(&mut self) {
+        self.move_cursor(text_editor::Motion::DocumentEnd);
+    }
+
     pub fn update(
         &mut self,
         message: Message,

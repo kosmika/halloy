@@ -819,8 +819,11 @@ impl Buffer {
         match self {
             Buffer::Empty
             | Buffer::FileTransfers(_)
-            | Buffer::ChannelDiscovery(_)
-            | Buffer::ConfigEditor(_) => Task::none(),
+            | Buffer::ChannelDiscovery(_) => Task::none(),
+            Buffer::ConfigEditor(state) => {
+                state.scroll_up_page();
+                Task::none()
+            }
             Buffer::Channel(channel) => {
                 channel.scroll_view.scroll_up_page().map(|message| {
                     Message::Channel(channel::Message::ScrollView(message))
@@ -855,8 +858,11 @@ impl Buffer {
         match self {
             Buffer::Empty
             | Buffer::FileTransfers(_)
-            | Buffer::ChannelDiscovery(_)
-            | Buffer::ConfigEditor(_) => Task::none(),
+            | Buffer::ChannelDiscovery(_) => Task::none(),
+            Buffer::ConfigEditor(state) => {
+                state.scroll_down_page();
+                Task::none()
+            }
             Buffer::Channel(channel) => {
                 channel.scroll_view.scroll_down_page().map(|message| {
                     Message::Channel(channel::Message::ScrollView(message))
@@ -891,8 +897,11 @@ impl Buffer {
         match self {
             Buffer::Empty
             | Buffer::FileTransfers(_)
-            | Buffer::ChannelDiscovery(_)
-            | Buffer::ConfigEditor(_) => Task::none(),
+            | Buffer::ChannelDiscovery(_) => Task::none(),
+            Buffer::ConfigEditor(state) => {
+                state.scroll_to_start();
+                Task::none()
+            }
             Buffer::Channel(channel) => {
                 channel.scroll_view.scroll_to_start(config).map(|message| {
                     Message::Channel(channel::Message::ScrollView(message))
@@ -928,8 +937,11 @@ impl Buffer {
         match self {
             Buffer::Empty
             | Buffer::FileTransfers(_)
-            | Buffer::ChannelDiscovery(_)
-            | Buffer::ConfigEditor(_) => Task::none(),
+            | Buffer::ChannelDiscovery(_) => Task::none(),
+            Buffer::ConfigEditor(state) => {
+                state.scroll_to_end();
+                Task::none()
+            }
             Buffer::Channel(channel) => {
                 channel.scroll_view.scroll_to_end(config).map(|message| {
                     Message::Channel(channel::Message::ScrollView(message))
