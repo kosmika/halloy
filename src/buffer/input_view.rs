@@ -311,27 +311,12 @@ pub fn view<'a>(
             }
 
             // Undo / redo
-            if key_press.modifiers.command() {
-                match key_press.key.as_ref() {
-                    iced::keyboard::Key::Character("z")
-                        if key_press.modifiers.shift() =>
-                    {
-                        return Some(text_editor::Binding::Custom(
-                            Message::Redo,
-                        ));
-                    }
-                    iced::keyboard::Key::Character("z") => {
-                        return Some(text_editor::Binding::Custom(
-                            Message::Undo,
-                        ));
-                    }
-                    iced::keyboard::Key::Character("y") => {
-                        return Some(text_editor::Binding::Custom(
-                            Message::Redo,
-                        ));
-                    }
-                    _ => {}
-                }
+            if let Some(binding) = text_editor_key_bindings::undo_redo(
+                &key_press,
+                Message::Undo,
+                Message::Redo,
+            ) {
+                return Some(binding);
             }
 
             // Handling for numpad keys: treat a numpad enter the same as

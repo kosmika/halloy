@@ -331,25 +331,15 @@ pub fn view<'a>(
                 return Some(binding);
             }
 
-            match key_press.key.as_ref() {
-                iced::keyboard::Key::Character("z")
-                    if key_press.modifiers.command()
-                        && key_press.modifiers.shift() =>
-                {
-                    Some(text_editor::Binding::Custom(Message::Redo))
-                }
-                iced::keyboard::Key::Character("z")
-                    if key_press.modifiers.command() =>
-                {
-                    Some(text_editor::Binding::Custom(Message::Undo))
-                }
-                iced::keyboard::Key::Character("y")
-                    if key_press.modifiers.command() =>
-                {
-                    Some(text_editor::Binding::Custom(Message::Redo))
-                }
-                _ => text_editor::Binding::from_key_press(key_press),
+            if let Some(binding) = text_editor_key_bindings::undo_redo(
+                &key_press,
+                Message::Undo,
+                Message::Redo,
+            ) {
+                return Some(binding);
             }
+
+            text_editor::Binding::from_key_press(key_press)
         })
         .highlight_with::<ConfigHighlighter>(
             Settings {
